@@ -102,7 +102,7 @@ namespace prsCapstone.Controllers
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal(id);
+            await RecalculateRequestTotal(requestLine.Id);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }

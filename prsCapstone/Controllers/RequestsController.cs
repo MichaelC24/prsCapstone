@@ -34,24 +34,35 @@ namespace prsCapstone.Controllers
                                     .Include(x => x.Users)
                                     .Where(x => x.Status == status).ToListAsync();
         }
+
         // GET: api/Requests
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequest()
         {
-            return await _context.Requests.ToListAsync();
+            return await _context.Requests.Include(u => u.Users).ToListAsync();
         }
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
-            var request = await _context.Requests.FindAsync(id);
+            //var request = await _context.Requests.FindAsync(id);
+            var request = await (from r in _context.Requests
+                                where r.Id == id
+                                select r).Include(x => x.Users).SingleOrDefaultAsync();
+
 
             if (request == null)
             {
                 return NotFound();
             }
+            //await _context.Entry(request).Collection(r => r.RequestLines).LoadAsync();
 
+            //var Request = new {
+            //      Request = request
+            //      , RequestLines = request.RequestLines
+            //};
+            //return Ok(Request);
             return request;
         }
         

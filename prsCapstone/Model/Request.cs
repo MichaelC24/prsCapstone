@@ -21,5 +21,6 @@ namespace prsCapstone.Model
         public int UserId { get; set; }
 
         public virtual User? Users { get; set; }
+        public virtual List<RequestLine>? RequestLines { get; set; } = new List<RequestLine>();
     }
 }

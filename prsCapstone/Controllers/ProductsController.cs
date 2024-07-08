@@ -25,7 +25,10 @@ namespace prsCapstone.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct() // <<<<<<<========= need to look at this
         {
-            return await _context.Products.Include(x => x.Vendors.Name). ToListAsync();
+            return await _context.Products
+                        .Include(p => p.Vendors)  
+                        .ToListAsync();
+            //return await _context.Products.Include(x => x.Vendors.Name). ToListAsync();
             //return await (from p in _context.Products
             //              select p).ToListAsync();
 
@@ -35,7 +38,9 @@ namespace prsCapstone.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id) // <<<<<<<========= need to look at this
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await (from p in _context.Products
+                                where p.Id == id
+                                select p).Include(v => v.Vendors).SingleOrDefaultAsync();
 
             if (product == null)
             {
