@@ -27,7 +27,60 @@ namespace prsCapstone.Controllers
         {
             return await _context.Vendors.ToListAsync();
         }
+        //PO METHOD
+        [HttpGet("po/{vendorId}")]
+        public async Task<ActionResult<Po>> CreatePo(int vendorId)
+        {
+            var vendor = await _context.Vendors.FindAsync(vendorId);
 
+            var values = await (from p in _context.RequestLines
+                               where p.Requests.Status == "APPROVED"
+                               && p.Products.VendorId == vendorId
+                               group p by p.Products.Name into g
+                               select new
+                               {
+
+                                   Product = g.Key,
+                                   TotalQuantity = g.Sum(p => p.Quantity),
+                                   //TotalPrice = g.Sum(p => p.Quantity * p.Products.Price),
+                                   // Assuming you want the total value (LineTotal) as well
+                                   LineTotal = g.Sum(p => p.Quantity * p.Products.Price)
+
+
+                               }).ToListAsync();
+
+            /*var sortedLines = new SortedList<int, Poline>();
+            //foreach (var line in lines)
+            //{
+            //    if (!sortedLines.ContainsKey(line))
+            //    {
+            //        var poline = new Poline()
+            //        {
+            //            Product = values,
+            //            Quantity = 0,
+            //            Price = l.Price,
+            //            LineTotal = l.LineTotal
+            //        };
+            //        sortedLines.Add(line.Id, poline);
+            //    }
+            //    sortedLines[l.Id].Quantity += l.Quantity;
+            //}
+            */
+            List<Poline> polines = new List<Poline>();
+
+            foreach (var p in values)
+            {
+                int i = 0;
+                polines.Add( new Poline { Product = p.Product, Quantity = p.TotalQuantity, LineTotal = p.LineTotal });
+                i++;
+            }
+            var pototal = (from p in polines select p.LineTotal).Sum();
+            var po = new Po(vendor, polines, pototal);
+            ///var test1 = new Poline({ Product = product, });
+            
+            
+            return po;
+        }
         // GET: api/Vendors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Vendor>> GetVendor(int id)

@@ -46,10 +46,9 @@ namespace prsCapstone.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
-            //var request = await _context.Requests.FindAsync(id);
-            var request = await (from r in _context.Requests
-                                where r.Id == id
-                                select r).Include(x => x.Users).SingleOrDefaultAsync();
+            var request = await _context.Requests.FindAsync(id);
+            //var request = await _context.Requests.Include(r => r.RequestLines).Include(u => u.Users).ThenInclude(rl => rl.Products).
+            //                    SingleOrDefaultAsync(x => x.Id == id);
 
 
             if (request == null)
@@ -58,9 +57,11 @@ namespace prsCapstone.Controllers
             }
             //await _context.Entry(request).Collection(r => r.RequestLines).LoadAsync();
 
-            //var Request = new {
-            //      Request = request
-            //      , RequestLines = request.RequestLines
+            //var Request = new
+            //{
+            //    Request = request
+            //      ,
+            //    RequestLines = request.RequestLines
             //};
             //return Ok(Request);
             return request;
@@ -104,19 +105,19 @@ namespace prsCapstone.Controllers
             return request;
         }
         [HttpPut("reject/{id}")] //SETS STATUS TO REJECT
-        public async Task<ActionResult<Request>> Reject(int id)
+        public async Task<ActionResult<Request>> Reject(int id, Request request)
         {
-            var request = await _context.Requests.FindAsync(id);
-
-            if (request == null)
+            var re = await _context.Requests.FindAsync(id);
+            if (re == null)
             {
                 return NotFound();
             }
-            request.Status = "REJECTED";
-            _context.Entry(request).State = EntityState.Modified;
+            re.Status = "REJECTED";
+            re.RejectionReason = request.RejectionReason;
+            _context.Entry(re).State = EntityState.Modified;
             //_context.Add(request);
             _context.SaveChanges();
-            return request;
+            return re;
         }
         // PUT: api/Requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
