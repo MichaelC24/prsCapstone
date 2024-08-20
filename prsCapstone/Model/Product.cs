@@ -27,6 +27,6 @@ namespace prsCapstone.Model
 
         public int VendorId { get; set; }
 
-        public virtual Vendor? Vendors { get; set; }
+        public virtual Vendor? Vendor { get; set; }
     }
 }

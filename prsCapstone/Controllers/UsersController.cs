@@ -115,6 +115,13 @@ namespace prsCapstone.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
+            
+            
+            
+
+
+
         }
+        
     }
 }

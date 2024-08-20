@@ -35,8 +35,8 @@ namespace prsCapstone.Controllers
 
             var values = await (from p in _context.RequestLines
                                where p.Requests.Status == "APPROVED"
-                               && p.Products.VendorId == vendorId
-                               group p by p.Products.Name into g
+                               && p.Product.VendorId == vendorId
+                               group p by p.Product.Name into g
                                select new
                                {
 
@@ -44,7 +44,7 @@ namespace prsCapstone.Controllers
                                    TotalQuantity = g.Sum(p => p.Quantity),
                                    //TotalPrice = g.Sum(p => p.Quantity * p.Products.Price),
                                    // Assuming you want the total value (LineTotal) as well
-                                   LineTotal = g.Sum(p => p.Quantity * p.Products.Price)
+                                   LineTotal = g.Sum(p => p.Quantity * p.Product.Price)
 
 
                                }).ToListAsync();

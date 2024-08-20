@@ -20,7 +20,7 @@ namespace prsCapstone.Model
         public decimal Total { get; set; } = 0m;
         public int UserId { get; set; }
 
-        public virtual User? Users { get; set; }
+        public virtual User? User { get; set; }
         public virtual List<RequestLine>? RequestLines { get; set; } = new List<RequestLine>();
     }
 }

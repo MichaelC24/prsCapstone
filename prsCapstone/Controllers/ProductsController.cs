@@ -26,7 +26,7 @@ namespace prsCapstone.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct() // <<<<<<<========= need to look at this
         {
             return await _context.Products
-                        .Include(p => p.Vendors)  
+                        .Include(p => p.Vendor)  
                         .ToListAsync();
             //return await _context.Products.Include(x => x.Vendors.Name). ToListAsync();
             //return await (from p in _context.Products
@@ -40,7 +40,7 @@ namespace prsCapstone.Controllers
         {
             var product = await (from p in _context.Products
                                 where p.Id == id
-                                select p).Include(v => v.Vendors).SingleOrDefaultAsync();
+                                select p).Include(v => v.Vendor).SingleOrDefaultAsync();
 
             if (product == null)
             {

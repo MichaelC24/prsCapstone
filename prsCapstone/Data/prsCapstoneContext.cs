@@ -14,10 +14,10 @@ namespace prsCapstone.Data
         {
         }
 
-        public DbSet<prsCapstone.Model.User> Users { get; set; } = default!;
-        public DbSet<prsCapstone.Model.Vendor> Vendors { get; set; } = default!;
-        public DbSet<prsCapstone.Model.Request> Requests { get; set; } = default!;
-        public DbSet<prsCapstone.Model.Product> Products { get; set; } = default!;
-        public DbSet<prsCapstone.Model.RequestLine> RequestLines { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<Vendor> Vendors { get; set; } = default!;
+        public DbSet<Request> Requests { get; set; } = default!;
+        public DbSet<Product> Products { get; set; } = default!;
+        public DbSet<RequestLine> RequestLines { get; set; } = default!;
     }
 }
