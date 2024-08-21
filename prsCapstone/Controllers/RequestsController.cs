@@ -56,7 +56,7 @@ namespace prsCapstone.Controllers
                 return NotFound();
             }
 
-            return Ok(request);
+            return request;
         }
         
 
