@@ -17,7 +17,7 @@ namespace prsCapstone.Model
         [StringLength(10)]
         public string Status { get; set; } = "NEW";
         [Column(TypeName = "decimal(11,2)")]
-        public decimal Total { get; set; } = 0m;
+        public decimal Total { get; set; } = 0;
         public int UserId { get; set; }
 
         public virtual User? User { get; set; }

@@ -14,6 +14,7 @@ namespace prsCapstone.Model
 
         [JsonIgnore]
         public virtual Request? Requests { get; set; }
+        [JsonIgnore]
         public virtual Product? Product { get; set; }
     }
 }

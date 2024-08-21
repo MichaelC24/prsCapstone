@@ -34,9 +34,9 @@ namespace prsCapstone.Controllers
             var vendor = await _context.Vendors.FindAsync(vendorId);
 
             var values = await (from p in _context.RequestLines
-                               where p.Requests.Status == "APPROVED"
-                               && p.Product.VendorId == vendorId
-                               group p by p.Product.Name into g
+                               where p.Requests!.Status == "APPROVED"
+                               && p.Product!.VendorId == vendorId
+                               group p by p.Product!.Name into g
                                select new
                                {
 

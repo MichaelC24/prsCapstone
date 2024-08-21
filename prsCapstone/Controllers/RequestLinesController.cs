@@ -25,19 +25,22 @@ namespace prsCapstone.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RequestLine>>> GetRequestLine()
         {
-            return await _context.RequestLines.ToListAsync();
+            return await _context.RequestLines.Include(x=> x.Product).ToListAsync();
         }
 
         // GET: api/RequestLines/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RequestLine>> GetRequestLine(int id)
         {
-            var requestLine = await _context.RequestLines.FindAsync(id);
+            
+
+            var requestLine = await _context.RequestLines.Include(x=> x.Product).SingleOrDefaultAsync(x => x.Id == id);
 
             if (requestLine == null)
             {
                 return NotFound();
             }
+            
 
             return requestLine;
         }
@@ -56,8 +59,11 @@ namespace prsCapstone.Controllers
 
                            join p in _context.Products
                               on rl.ProductId equals p.Id
-                           where rl.Id == id
-                           select (rl.Quantity * p.Price)).Sum();
+                           where rl.RequestId == id
+                           select  new
+                           {
+                            LineTotal = p.Price* rl.Quantity
+                           }).Sum(x => x.LineTotal);
            
             await _context.SaveChangesAsync();
 
@@ -78,7 +84,9 @@ namespace prsCapstone.Controllers
 
             try
             {
+
                 await _context.SaveChangesAsync();
+                await RecalculateRequestTotal(requestLine.RequestId);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,7 +110,7 @@ namespace prsCapstone.Controllers
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal(requestLine.Id);
+            await RecalculateRequestTotal(requestLine.RequestId);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
@@ -116,10 +124,10 @@ namespace prsCapstone.Controllers
             {
                 return NotFound();
             }
-
+            var requestId = requestLine.RequestId;
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-            await RecalculateRequestTotal(id);
+            await RecalculateRequestTotal(requestId);
 
             return NoContent();
         }

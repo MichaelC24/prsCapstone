@@ -47,8 +47,8 @@ namespace prsCapstone.Controllers
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
             var request = await _context.Requests
-                             .Include(x => x.User!)
-                             .Include(r => r.RequestLines!)
+                             .Include(x => x.User)
+                             .Include(r => r.RequestLines)!
                              .ThenInclude(p => p.Product)
                              .SingleOrDefaultAsync(a => a.Id == id);
             if (request == null)
